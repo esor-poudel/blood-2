@@ -1,0 +1,1 @@
+<a href="{{route('donar')}}" class=""> new donar is registered</a>
