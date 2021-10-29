@@ -4,63 +4,34 @@
 @section('content')
 <div class="panel panel-default">
 <div class="panel-body">
-<table class="table table-hover">
+<table width="100%" class="table table-striped table-lightfont datatable-responsive">
 
             <thead>
-                 <th>Photo</th>
-            <th> Donar name </th>
-            <th>Date-Of-birth</th>
-            <th>last Donated</th>
-            <th>Blood Group</th> 
-            <th>District</th>
-            <th>City</th>
+            <th>Image</th>
+            <th> Donar Information </th>
+            <th>Last Donation</th>
+            <th>Location</th>
              <th>Number</th>
+             <th>Action</th>
             </thead>
             <tbody>
            @if($donars->count()>0)
-           
            @foreach($donars as $donar)
             <tr>
             <td><img src="{{asset('uploads/image/'.$donar->image)}}"  width="140px" height="140px" style="border-radius:50%;" alt="image"></td>
-            <td> {{$donar->name}} </td>
-            <td>{{date('F j,Y',strtotime($donar->birth))}}</td>
-            <td>{{date('F j,Y',strtotime($donar->d_date))}}</td>
-            <td>{{$donar->b_group}}</td>
-            @foreach($district as $d)
-            @if($donar->district_id===$d->id)
-            <td>{{$d->name}}</td>
-            @endif
-            @endforeach
-            @foreach($city as $c)
-            @if($donar->city_id===$c->id)
-            <td>{{$c->name}}</td>
-            @endif
-            @endforeach
-            <td>{{$donar->ph_number}}</td>
-
-            <td><a href="{{route('donars.restore',['id'=>$donar->id])}}" class="btn btn-sm btn-info">
-                                         accept
-            </a>
-            
-            </td>
-
-            <td>
+            <td> <b>Name</b>: {{$donar->name}} <br>
+                 <b>DOB</b>:{{ $donar->birth }} <br>
+                 <b>B Group</b>: {{$donar->b_group}}</td>
+            <td>{{$donar->d_date}}</td>
+             <td>  <b>District</b> : {{ $donar->district->name }}<br>
+                   <b>City</b>:{{ $donar->district->city->name }}
+            <td> {{$donar->ph_number}}</td>
+            <td><a href="{{route('donars.restore',['id'=>$donar->id])}}" class="btn btn-sm btn-info"> accept </a>
             <form action="{{route('donars.destroy',['id'=>$donar->id,'user_id'=>$donar->user_id])}}" method="post">
-
             {{csrf_field()}}
-         
-            
-            <button class="btn btn-sm btn-danger" type="submit">reject</button>
-            
-            
-           
-          
-
-
+            <button class="btn btn-sm btn-danger mt-2" type="submit">reject</button></form></td>
             </tr>
-
          @endforeach
-       
            @else
            <tr>
                 <th colspan="5" class="text-center">No Donars yet</th>

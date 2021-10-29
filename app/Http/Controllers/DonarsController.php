@@ -14,81 +14,45 @@ use App\City;
 use App\District;
 use App\Donar;
 use App\Enquiry;
+use App\Http\Requests\Donor\DonorRequest;
 use Auth;
 use Session;
 
 class DonarsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct(Donar $donor, District $district, City $city)
+    {
+        $this->donor = $donor;
+        $this->district = $district;
+        $this->city = $city;
+        $this->user = new User();
+    }
     public function index()
     {
-        $donar = Donar::where('approved', 0)->get();
-        $district = District::all();
-        $city = City::all();
-        return view('admin.donars.unregisteredDonar')->with('donars', $donar)
-            ->with('city', $city)
-            ->with('district', $district);
+        $donar =$this->donor->where('approved', 0)->get();
+        return view('admin.donars.unregisteredDonar')->with('donars', $donar);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function store(DonorRequest $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $admin = User::where('admin', 1)->first();
-        $notification = Donar::where('user_id', auth::id());
-
-
-        $this->validate($request,[
-                'name' => 'required',
-                'district' => 'required',
-                'image' => 'required|image',
-                'city' => 'required',
-                'ph_number' => 'required|min:10|max:10',
-                'b_group' => 'required',
-                'birth' => 'required|date_format:Y-m-d|before:' . Carbon::now()->subYears(18),
-                'd_date' => 'required|date_format:Y-m-d|before:' . Carbon::now()->subMonth(3),
-            ],
-            [
-                'birth.before' => 'you must be 18 years old',
-                'd_date.before' => 'you must wait 3 month before next donation'
-
-            ]
-        );
-        $donar = new Donar;
-        $donar->name = $request->name;
-        $donar->ph_number = $request->ph_number;
-        $donar->b_group = $request->b_group;
-        $donar->district_id = $request->district;
-        $donar->city_id = $request->city;
-        $donar->birth = $request->birth;
+        $admin = $this->user->where('admin', 1)->first();
+        $notification =$this->donor->where('user_id', auth::id());
+        $data['name'] = $request->name;
+        $data['ph_number'] = $request->ph_number;
+        $data['b_group'] = $request->b_group;
+        $data['district_id'] = $request->district;
+        $data['city_id'] = $request->city;
+        $data['birth'] = $request->birth;
         if ($request->hasfile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
             $file->move('uploads/image', $filename);
-            $donar->image = $filename;
+            $data['image'] = $filename;
         }
-        $donar->d_date = $request->d_date;
-        $donar->user_id = Auth::id();
-        $donar->save();
+        $data['d_date']= $request->d_date;
+        $data['user_id'] = Auth::id();
+        $this->donor->create($data);
         $admin->notify(new NewDonarAdded($notification));
         Session::flash('success', 'register completed');
         return redirect()->route('dashboard');
@@ -114,36 +78,21 @@ class DonarsController extends Controller
     }
     public function alldonar()
     {
-
-        $donar_address = Donar::where('approved', 1)->pluck('district_id');
-        $district = District::all();
-        $city = City::all();
-        $donars = Donar::where('approved', 1)->get();
-        return view('admin.donars.registeredDonar')->with('donars', $donars)
-            ->with('district', $district)->with('address', $donar_address)->with('city', $city);
+        $donars =$this->donor->where('approved', 1)->with('district.city')->get();
+        return view('admin.donars.registeredDonar')->with('donars', $donars);
     }
 
     public function BecomeDonar()
     {
         $existing_donors = Donar::all()->pluck('user_id')->toArray();
         $show_form = true;
-        $donor= Donar::where('user_id',auth::id())->get();
+        $donor=$this->donor->where('user_id',auth::id())->get();
         if (in_array(auth::id(), $existing_donors)) {
             $show_form = false;
         }
 
-        // $approved_status = Donar::withTrashed()->find(auth::id())->first();
-        // $current_donar =  Donar::find(auth::id())->first();
-        // dd($current_donar);
-        // $donar= Donar::withTrashed()->get();
-
         $district = District::all()->pluck('name', 'id');
-       
-      
-        
-
         return view('donar.donars.create')
-            //  ->with('current_donar',$current_donar)
             ->with('show_form', $show_form)
             ->with('district', $district)
             ->with('donor',$donor);
