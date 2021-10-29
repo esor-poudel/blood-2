@@ -1,101 +1,18 @@
-@extends('layouts.master')
+@extends('layouts.forum')
 @section ('content')
 
-<div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-          @if(count($donor)>0)
-          @foreach($donor as $d)
-        <img src="{{asset('uploads/image/'.$d->image)}}" class="img-circle elevation-2" alt="User Image">
-        @endforeach
-        @endif
-      </div>
-      <div class="info">
-        <a href="#" class="d-block">{{ strtoupper(auth::user()->name) }}</a>
-      </div>
-    </div>
-    
-    <!-- SidebarSearch Form -->
-   
-    <!-- Sidebar Menu -->
-    <nav class="mt-2">
 
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <!-- Add icons to the links using the .nav-icon class
-           with font-awesome or any other icon font library -->
-        <li class="nav-item menu-open">
-          <a href="#" class="nav-link ">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>
-              Dashboard
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            @if($show_form==true)
-            <li class="nav-item">
-              <a href="{{ route('donar.show') }}" class="nav-link">
-                <i class="fas fa-user-alt"></i>
-                <p>Donor Form</p>
-              </a>
-            </li>
-            @endif
-            <li class="nav-item">
-              <a href="{{ route('profile.index') }}" class="nav-link">
-
-                <i class="fas fa-cogs"></i>
-                <p>Update Profile</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
-          document.getElementById('logout-form').submit();">
-           <i class="fas fa-power-off"></i>
-           <p>
-             {{ __('Logout') }}
-
-           </p>
-          </a>
-
-          <form id="logout-form" action="{{ route('logout') }}" method="POST"
-          style="display: none;">
-          @csrf
-          </form>
-
-
-
-
-
-
-
-
-
-        </li>
-      </ul>
-    </nav>
-    <!-- /.sidebar-menu -->
-  </div>
-  <!-- /.sidebar -->
-</aside>
-
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-
-    @foreach($current_profile as $donar)
 <div class="text-center">
-    <h1>Hi {{$donar->name}}</h1>
+    <h1>Hi {{$current_profile->name}}</h1>
 </div>
 <div class="text-center">
-    <h6>your last donation date is {{date('F j,Y',strtotime($donar->d_date))}} and mobile number= {{$donar->ph_number}}
+    <h6>your last donation date is {{date('F j,Y',strtotime($current_profile->d_date))}} and mobile number= {{$current_profile->ph_number}}
     </h6>
 </div>
 <div class="text-center">
     <h4>update profile</h4>
 </div>
-<form id="create-channel-form" action="{{route('profile.store',['id'=>$donar->id])}}" method="post"
+<form id="create-channel-form" action="{{route('profile.store',['id'=>$current_profile->id])}}" method="post"
     enctype="multipart/form-data">
     {{csrf_field()}}
 
@@ -131,7 +48,7 @@
             name="image">
             <div class="col-lg-9">
             <label for="name">Last Donate Date</label>
-            <input type="date" name="date" class="form-control">
+            <input type="date" name="date" class="form-control" value="{{ $current_profile->d_date ?? old('date') }}" >
             </div>
 
     </div>
@@ -143,36 +60,4 @@
         <div class="text-center">
             <button class="btn btn-success " type="submit">update profile</button>
         </div>
-        @endforeach
-
-
-<!-- /.col-md-6 -->
-</div>
-<!-- /.row -->
-</div><!-- /.container-fluid -->
-</div>
-<!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
-
-<!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark">
-<!-- Control sidebar content goes here -->
-<div class="p-3">
-  <h5>Title</h5>
-  <p>Sidebar content</p>
-</div>
-</aside>
-<!-- /.control-sidebar -->
-
-<!-- Main Footer -->
-
-<script src="/js/app.js"></script>
-</body>
-
-</html>
-
-
-
-
-        @endsection
+ @endsection

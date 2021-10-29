@@ -35,19 +35,17 @@ class Donar extends Model
 
                 if(isset($data['district'])==Null && isset($data['city'])==Null)
                 {
-
-                    $search= Donar::where('b_group',$data)->where('approved',1)->whereMonth('d_date','>',Carbon::today()->month);
+                    $search= Donar::where('b_group',$data)->where('approved',1);
                      if(isset($data['district'])==Null && isset($data['blood'])=='A+'){
 
-                          $search= Donar::where('b_group',$data['blood'])->where('approved',1)->whereMonth('d_date','>',Carbon::today()->month);
+                          $search= Donar::where('b_group',$data['blood'])->where('approved',1);
                      }
                 }
                 else
                 {
-                   $search= Donar::where('district_id',$data['district'])->where('city_id',$data['city'])->whereMonth('d_date','>',Carbon::today()->month)->where('approved',1)->where('b_group',$data['blood']);
-
+                   $search= Donar::where('district_id',$data['district'])->where('city_id',$data['city'])->where('approved',1)->where('b_group',$data['blood']);
                 }
-                return ($search->get());
+                return ($search->with('district.city')->get());
                }
 
 

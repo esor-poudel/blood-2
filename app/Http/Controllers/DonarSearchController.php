@@ -19,19 +19,13 @@ class DonarSearchController extends Controller
            return redirect()->back();
        }
        else{
-
-       
-        
-        
         $district = District::all();
-        $city = City::all();
         $data= request()->all();
         $this->search= new Donar();
         $search = $this->search->getsearch($data);
-       
         return view('seekers.result')->with('result', $search)
-                    ->with('district', $district)
-                    ->with('city', $city);
+                    ->with('district', $district);
+
     }
 }
 }

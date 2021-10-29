@@ -13,15 +13,17 @@ class ProfileController extends Controller
     public function index()
     {
 
-        $current_profile= Donar::where('user_id',auth::id())->where('approved',1)->get();
-      // dd($current_profile);
-        $existing_donors = Donar::all()->pluck('user_id')->toArray(); 
+        $current_profile= Donar::where('user_id',auth::id())->where('approved',1)->first();
+        if(!isset($current_profile))
+        {
+            return redirect()->back();
+        }
+        $existing_donors = Donar::all()->pluck('user_id')->toArray();
         $show_form = true;
-        $donor= Donar::where('user_id',auth::id())->get();
+        $donor= Donar::where('user_id',auth::id())->first();
         if(in_array(auth::id(), $existing_donors))
             {
                 $show_form = false;
-
             }
             if($show_form==true)
             {
@@ -29,18 +31,17 @@ class ProfileController extends Controller
                 return redirect()->back();
             }
             else{
-             
                 return view('donar.donars.edit')->with('current_profile',$current_profile)
                 ->with('donor',$donor)
                 ->with('show_form',$show_form);
             }
 
-       
+
     }
 
     public function store(Request $request,$id)
     {
-       
+
         $this->validate($request,[
 
             'date'=>'required|date_format:Y-m-d|before:'.Carbon::now(),

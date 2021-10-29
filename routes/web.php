@@ -14,10 +14,7 @@
 use Illuminate\Http\Request;
 use Stevebauman\Location\Facades\Location;
 
-Route::get('/',[
-    'uses'=>'FrontEndController@index',
-    'as'=>'home.show'
-]);
+
 
 Auth::routes();
 
@@ -25,150 +22,73 @@ Route::get('/markAsRead',function(){
     auth()->user()->unreadNotifications->markAsRead();
 });
 
-Route::get('/ipaddress',function(Request $request){
-    $userIp = $request->ip();
 
-    $locationData = Location::get('27.34.68.67');
-    $data= array($locationData->longitude,$locationData->latitude);
-   $cokkie= request()->cookie('location', $data , 10);
-   dd($cokkie);
-   return redirect()->back();
+//Admin
+Route::prefix('admin')->group(function () {
+    Route::resource('events','EventsController');
+    Route::resource('bloodbanks','BloodBankController');
+    Route::resource('settings','SettingsController');
+    Route::get('/add-city','DistrictCityController@cityadd')->name('city.add');
+    Route::get('/city-create','DistrictCityController@citycreate')->name('city.create');
+    Route::get('/show-enquiry','DonarsController@enquiry')->name('enquiry.index');
+    Route::get('/all-donors','DonarsController@alldonar')->name('register.donar');
+    Route::get('/new-donors','DonarsController@index')->name('donar');
+    Route::get('donar-accept/{id}','DonarsController@restore')->name('donars.restore');
+    Route::post('/donar-reject/{id}/{user_id}','DonarsController@kill')->name('donars.destroy');
+    Route::get('/seeker-blood-request','NeedController@requestblood')->name('blood.request');
+    Route::get('/home','HomeController@index')->name('home');
+
+
 });
 
+//donor
+Route::prefix('donor')->group(function () {
+    Route::get('/fill-donor-form','DonarsController@BecomeDonar')->name('donar.show');
+    Route::get('/profile','ProfileController@index')->name('profile.index');
+    Route::post('/change-profile/{id}','ProfileController@store')->name('profile.store');
+    Route::post('/store','DonarsController@store')->name('donars.store');
+    Route::get('/dashboard','HomeController@dashboard')->name('dashboard');
+    Route::get('/need-request','NeedController@donarview')->name('need.request');
+    Route::get('/need-accept/{id}/{need}','NeedController@needaccept')->name('need.accept');
+});
 
-Route::get('/donar/search',[
-    'uses'=>'DonarSearchController@search',
-    'as'=>'donars.search'
+//frontend
+Route::prefix('frontend')->group(function () {
+    Route::post('/blood-need-save','NeedController@save')->name('need.save');
+    Route::get('/donor-search','DonarSearchController@search')->name('donars.search');
+    Route::post('/message-post','FrontEndController@store')->name('message.post');
 
-]);
+});
 
-Route::get('/blood/need',[
-        'uses'=>'NeedController@need',
-        'as'=>'blood.need'
-]);
-Route::post('/blood/need/save',[
-    'uses'=>'NeedController@save',
-    'as'=>'need.save'
-]);
-
-
-
-
-Route::get('/home',[
-    'uses'=>'HomeController@index',
-    'as'=>'home'
-]);
-
-
-Route::get('/dashboard',[
-    'uses'=>'HomeController@dashboard',
-    'as'=>'dashboard'
-]);
-
-
-Route::get('/donar/becomedonar',[
-    'uses'=>'DonarsController@BecomeDonar',
-    'as'=>'donar.show'
-]);
-
-Route::get('/getCity/{id}',[
-'uses'=>'DonarsController@getcity',
-]);
-
-Route::get('/searchCity/{id}',[
-    'uses'=>'FrontEndController@city',
-    ]);
+Route::get('/','FrontEndController@index')->name('home.show');
+Route::get('/getCity/{id}','DonarsController@getcity');
+Route::get('/searchCity/{id}','FrontEndController@city');
 
 
 
-Route::post('/login/users',[
-        'uses'=>'LoginController@login',
-        'as'=>'login.custome'
-]);
-
-Route::get('/seeker/blood/request/',[
-        'uses'=>'NeedController@requestblood',
-        'as'=>'blood.request'
-
-]);
-
-Route::post('/profile/store/{id}',[
-    'uses'=>'ProfileController@store',
-    'as'=>'profile.store'
-]);
-
-Route::get('/donar/profile',[
-    'uses'=>'ProfileController@index',
-    'as'=>'profile.index'
-]);
-
-Route::get('/seeker/need/accept/{id}/{need}',[
-
-    'uses'=>'NeedController@needaccept',
-    'as'=>'need.accept'
-]);
-
-Route::get('/donar/request/view',[
-    'uses'=>'NeedController@donarview',
-    'as'=>'donar.request.view'
-]);
-
-Route::resource('events','EventsController');
-Route::resource('settings','SettingsController');
-
-Route::post('/donars/store',[
-    'uses'=>'DonarsController@store',
-    'as'=>'donars.store'
 
 
-]);
 
-Route::get('/donars',[
-    'uses'=>'DonarsController@index',
-    'as'=>'donar'
-]);
 
-Route::get('donar/accept/{id}',[
-    'uses'=>'DonarsController@restore',
-    'as'=>'donars.restore'
-]);
-Route::post('/donar/delete/{id}/{user_id}',[
-    'uses'=>'DonarsController@kill',
-    'as'=>'donars.destroy'
-]);
 
-Route::get('/all/donars',[
-    'uses'=>'DonarsController@alldonar',
-    'as'=>'register.donar'
-]);
 
-Route::resource('bloodbanks','BloodBankController');
-Route::get('/bank/login',[
-    'uses'=>'CustomeLoginController@login',
-    'as'=>'bloodbank.user'
-]);
-Route::post('/login/successful',[
-    'uses'=>'CustomeLoginController@success',
-    'as'=>'login.successful'
-]);
 
-Route::get('/city/add',[
-    'uses'=>'DistrictCityController@cityadd',
-    'as'=>'city.add'
-]);
 
-Route::get('/city/create',[
-    'uses'=>'DistrictCityController@citycreate',
-    'as'=>'city.create'
-]);
 
-Route::post('/message/post',[
-    'uses'=>'FrontEndController@store',
-    'as'=>'message.post'
-]);
-Route::get('/enquiry/show',[
-    'uses'=>'DonarsController@enquiry',
-    'as'=>'enquiry.index'
-]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

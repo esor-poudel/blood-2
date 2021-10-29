@@ -75,11 +75,8 @@
               <option value="O-"@if(Request::get('blood')=='O-') selected @endif> O- </option>
               <option value="AB+"@if(Request::get('blood')=='AB+') selected @endif> AB+ </option>
               <option value="AB-"@if(Request::get('blood')=='AB-') selected @endif> AB- </option>
-
             </select>
-
             <button id="button" type="submit" class="btn btn-danger">Go</button>
-
           </form>
         </div>
         <div class="col-md-12">
@@ -100,27 +97,21 @@
               <tbody>
 
                 @foreach($result as $results)
+                @php
+                    $to = \Carbon\Carbon::parse($results->d_date);
+                    $from = \Carbon\Carbon::now();
+                     $diff_in_months = $to->diffInMonths($from);
+                @endphp
                 <tr>
                   <td><img src="{{asset('uploads/image/'.$results->image)}}" width="140px" height="140px"
                       style="border-radius:50%;" alt="image"></td>
-
-                  <td> {{ strtoupper($results->name)}} </td>
+                  <td> {{ strtoupper($results->name)}} <br> Availability : <span class="badge @if($diff_in_months >=3)badge-success @else badge-danger @endif" badge-success>@if($diff_in_months >=3) Available @else Not-Available @endif</span> </td>
                   <td>{{$results->b_group}}</td>
-                  @foreach($district as $d)
-                  @if($results->district_id===$d->id)
-                  <td>{{strtoupper($d->name)}}</td>
-                  @endif
-                  @endforeach
-                  @foreach($city as $c)
-                  @if($results->city_id===$c->id)
-                  <td>{{strtoupper($c->name)}}</td>
-                  @endif
-                  @endforeach
+                  <td>{{strtoupper($results->district->name)}}</td>
+                  <td>{{strtoupper($results->district->city->name)}}</td>
                   <td>{{$results->ph_number}}</td>
                 </tr>
-
                 @endforeach
-
               </tbody>
             </table>
           </div>
