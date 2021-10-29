@@ -18,13 +18,13 @@ class FrontEndController extends Controller
     {
         $district= District::all()->pluck('name','id');
         $setting= Setting::all();
-        $donor= DB::table('donars')->whereMonth('d_date','>',Carbon::today()->month)->orderBy('id','DESC')->simplePaginate(4);
-       
+        $donor= DB::table('donars')->where('approved','1')->orderBy('id','DESC')->simplePaginate(4);
+
         $event= DB::table('events')->orderBy('id','DESC')->simplePaginate(4);
        // dd($donor);
         $time= Carbon::now()->toTimeString();
         Toastr::info('welcome seeker!');
-        
+
         return view('welcome',compact('setting','donor'))->with('district',$district)->with('time', $time)
                                     ->with('event',$event);
     }

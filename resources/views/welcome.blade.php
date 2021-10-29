@@ -22,16 +22,16 @@
           border: none;
           cursor: pointer;
         }
-        
+
         .dropbtn:hover, .dropbtn:focus {
           background-color: #dd2727;
         }
-        
+
         .dropdown {
           position: relative;
           display: inline-block;
         }
-        
+
         .dropdown-content {
           display: none;
           position: absolute;
@@ -41,16 +41,16 @@
           box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
           z-index: 1;
         }
-        
+
         .dropdown-content a {
           color: black;
           padding: 12px 16px;
           text-decoration: none;
           display: block;
         }
-        
+
         .dropdown a:hover {background-color: #ddd;}
-        
+
         .show {display: block;}
         </style>
 </head>
@@ -71,13 +71,13 @@
                                     Service Time : {{ $time }}</li>
                             </ul>
                         </div>
-                       
+
                         <div class="col-lg-6 col-md-12">
                             <ul class="ulright">
                                 <li>
                                     <i class="fas fa-user"></i>
                                     <a href="{{ route('login') }}" class="">login</a></li>
-                                    
+
                             </ul>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
                                         <li class="nav-item">
                                            <a class="nav-link" href="#process">Donors</a>
                                        </li>
-                                       
+
                                         <li class="nav-item">
                                             <a class="nav-link" href="#gallery">Gallery</a>
                                         </li>
@@ -130,10 +130,10 @@
                                             <a class="nav-link" href="#contact">Contact US</a>
                                         </li>
                                         <form action="{{route('donars.search')}}" method="GET">
-                                           
-                                                             
+
+
                                     <div class="form-group">
-                                       
+
                                        <select onclick="myFunction()" id="b_group" name="search">
                                         <option value="" disabled selected>Blood Group</option>
                                        <option value="A+"> A+ </option>
@@ -146,29 +146,29 @@
                                        <option value="AB-"> AB- </option>
                                        </select>
                                         </div>
-                                        
-                                            
+
+
                                     <div class="form-group">
                                         <div class="text-center">
                                         <button id="button" class="btn btn-success"  type="submit">Search</button>
                                         </div>
-                
+
                                         </form>
                                     </ul>
                                 </div>
                             </nav>
                         </div>
                     </div>
-                    
+
                 </div>
-                
+
             </div>
-            
+
         </header>
 
-        
-        
-        
+
+
+
     <!-- ################# Slider Starts Here#######################--->
 
     <div class="slider-detail">
@@ -224,13 +224,13 @@
 
 
     </div>
-    
+
     <!--*************** About Us Starts Here ***************-->
    <section id="about" class="contianer-fluid about-us">
        <div class="container">
            <div class="row session-title">
                <h2>About Us</h2>
-               
+
            </div>
             <div class="row">
                 <div class="col-md-6 text">
@@ -255,7 +255,7 @@
             </div>
        </div>
    </section>
-    
+
    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -268,8 +268,8 @@
         <div class="modal-body">
             <form id="form" action="{{route('need.save')}}" method="POST">
                 {{csrf_field()}}
-            
-            
+
+
             <div class="form-group">
                 <label for="name">Blood Group</label>
                 <select id="blood_group" name="blood_group">
@@ -318,53 +318,53 @@
                 <div class="alert-danger">{{$errors->first('need_date')}}</div>
                 @enderror
             </div>
-        
+
         </form>
         </div>
         <div class="modal-footer">
           <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="submit" id="submit" onclick="document.getElementById('form').submit();"  class="btn btn-primary">post need</button>
         </div>
-    
+
       </div>
     </div>
   </div>
 
 
 
-  
-    
+
+
       <!-- ################# Gallery Start Here #######################--->
-     
-   
-    
-    
-    
+
+
+
+
+
      <!-- ################# Donation Process Start Here #######################--->
-     
+
      <section id="process" class="donation-care">
          <div class="container">
            <div class="row session-title">
                <h2>Donors Lists</h2>
-               
+
            </div>
             <div class="row">
                 @foreach($donor as $donors)
                  <div class="col-md-3 col-sm-6 vd">
                     <div class="bkjiu">
-                     <img src="{{asset('uploads/image/'.$donors->image)}}" alt=""> 
+                     <img src="{{asset('uploads/image/'.$donors->image)}}" alt="">
                      <br>
                      <p> Name: {{ strtoupper($donors->name) }}</p>
                      <p>Blood Group: {{ $donors->b_group }}</p>
                      <p>Contact Number: {{ $donors->ph_number }}</p>
                      <p></p>
-                    
+
                      </div>
                  </div>
                  @endforeach
-                
+
      </section>
-     
+
      <div id="gallery" class="gallery container-fluid">
         <div class="container">
             <div class="row session-title">
@@ -403,14 +403,14 @@
                             <div class="gg-element">
                                 <img src="assets/images/gallery/g10.jpg">
                             </div>
-                            
-                            
+
+
                           </div>
             </div>
         </div>
     </div>
-     
-     
+
+
          <!--################### Our Blog Starts Here #######################--->
         <div id="blog" class="blog-container contaienr-fluid">
             <div class="container">
@@ -419,9 +419,9 @@
                   <p>Can I help organise blood donation events?</p>
                 </div>
                 <div class="row news-row">
-                   
+
                    @foreach ($event as $e)
-                       
+
                    <div class="col-md-6">
                     <div class="news-card">
                         {{-- <div class="image">
@@ -442,15 +442,15 @@
                 </div>
                     @endforeach
                 </div>
-                    
-     
-     
 
-   
+
+
+
+
       <!--*************** Footer  Starts Here *************** -->
     <footer id="contact" class="container-fluid">
         <div class="container">
-            
+
             <div class="row content-ro">
                 <div class="col-lg-4 col-md-12 footer-contact">
                     <h2>Contact Informatins</h2>
@@ -507,7 +507,7 @@
                    </div>
 
                 </div>
-                
+
                 <div class="col-lg-4 col-md-12 footer-form">
                     <form action="{{ route('message.post') }}" method="POST" enctype="multipart/form-data">
                         {{csrf_field()}}
@@ -524,7 +524,7 @@
                             <button type="submit" class="btn btn-sm btn-primary w-100">Send Request</button>
                         </div>
                     </div>
-               
+
                 </div>
             </form>
             </div>
@@ -547,8 +547,8 @@
             </div>
         </div>
     </footer>
-    
-    
+
+
 </body>
 
     <script src="assets/js/jquery-3.2.1.min.js"></script>
@@ -558,7 +558,7 @@
     <script src="assets/plugins/scroll-fixed/jquery-scrolltofixed-min.js"></script>
     <script src="assets/js/script.js"></script>
     <script>
-      
+
                 $(document).ready(function() {
                     $('select[name="district"]').on('change', function() {
                         var district_id = $(this).val();
@@ -589,12 +589,4 @@
                 $('#exampleModal').modal('show');
             @endif
             </script>
-            <script>
-                function myFunction() {
-                   
-                    
-                  alert("want to know your location");
-                }
-                </script>
-           
-    
+            

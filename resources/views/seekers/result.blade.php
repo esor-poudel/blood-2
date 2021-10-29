@@ -15,13 +15,13 @@
     #button
     {
       background-color: #ff1100;
-    } 
+    }
     #image
     {
       height: 200%;
       width: 100%;
     }
-    
+
   </style>
   {{-- <div class="container">
     <div class="row nav-row"> --}}
@@ -34,17 +34,17 @@
 </head>
 
 <body>
-  
- 
+
+
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-6 text-center mb-4">
           <h2 class="heading-section"></h2>
         </div>
       </div>
-      
+
       <div class="row">
-        
+
         <div>
           <form method="GET" action="{{route('donars.search')}}" class="form-inline" style="display:inline-block;"
             id='searchform'>
@@ -63,18 +63,18 @@
               style="height:40px; border:0px;">
 
             </select>
-            
+
             <select id="blood"  class="form-control form-control" style="display:inline-block" name="blood"
               style="height:40px; border:0px;">
-              
-              <option value="A+"> A+ </option>
-              <option value="A-"> A- </option>
-              <option value="B+"> B+ </option>
-              <option value="B-"> B- </option>
-              <option value="O+"> O+ </option>
-              <option value="O-"> O- </option>
-              <option value="AB+"> AB+ </option>
-              <option value="AB-"> AB- </option>
+
+              <option value="A+" @if(Request::get('blood')=='A+') selected @endif> A+ </option>
+              <option value="A-" @if(Request::get('blood')=='A-') selected @endif > A- </option>
+              <option value="B+" @if(Request::get('blood')=='B+') selected @endif> B+ </option>
+              <option value="B-" @if(Request::get('blood')=='B-') selected @endif> B- </option>
+              <option value="O+"@if(Request::get('blood')=='O+') selected @endif> O+ </option>
+              <option value="O-"@if(Request::get('blood')=='O-') selected @endif> O- </option>
+              <option value="AB+"@if(Request::get('blood')=='AB+') selected @endif> AB+ </option>
+              <option value="AB-"@if(Request::get('blood')=='AB-') selected @endif> AB- </option>
 
             </select>
 
@@ -103,7 +103,7 @@
                 <tr>
                   <td><img src="{{asset('uploads/image/'.$results->image)}}" width="140px" height="140px"
                       style="border-radius:50%;" alt="image"></td>
-                     
+
                   <td> {{ strtoupper($results->name)}} </td>
                   <td>{{$results->b_group}}</td>
                   @foreach($district as $d)
