@@ -106,6 +106,6 @@ class DonarsController extends Controller
     public function enquiry()
     {
         $enquiry= Enquiry::all();
-        return view ('admin.enquiry.index',compact('enquiry'));
+        return view('admin.enquiry.index',compact('enquiry'));
     }
 }

@@ -27,13 +27,14 @@ Route::get('/markAsRead',function(){
 
 Route::get('/ipaddress',function(Request $request){
     $userIp = $request->ip();
-  
+
     $locationData = Location::get('27.34.68.67');
     $data= array($locationData->longitude,$locationData->latitude);
    $cokkie= request()->cookie('location', $data , 10);
    dd($cokkie);
    return redirect()->back();
 });
+
 
 Route::get('/donar/search',[
     'uses'=>'DonarSearchController@search',
@@ -52,7 +53,7 @@ Route::post('/blood/need/save',[
 
 
 
- 
+
 Route::get('/home',[
     'uses'=>'HomeController@index',
     'as'=>'home'
@@ -102,7 +103,7 @@ Route::get('/donar/profile',[
 ]);
 
 Route::get('/seeker/need/accept/{id}/{need}',[
- 
+
     'uses'=>'NeedController@needaccept',
     'as'=>'need.accept'
 ]);

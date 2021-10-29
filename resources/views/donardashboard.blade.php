@@ -7,19 +7,15 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-          @if(count($donor)>0)
-          @foreach($donor as $d)
-        <img src="{{asset('uploads/image/'.$d->image)}}" class="img-circle elevation-2" alt="User Image">
-        @endforeach
-        @endif
+        <img src="{{asset('uploads/image/'.$donor->image)}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
         <a href="#" class="d-block">{{ strtoupper(auth::user()->name) }}</a>
       </div>
     </div>
-    
+
     <!-- SidebarSearch Form -->
-   
+
     <!-- Sidebar Menu -->
     <nav class="mt-2">
 
@@ -35,7 +31,7 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-             
+
             @if($existing_donar==true)
             <li class="nav-item">
               <a href="{{ route('donar.show') }}" class="nav-link ">
@@ -111,70 +107,59 @@
         <div div class="card-header bg-danger">
             <h5>Welcome to Easy Blood Portal</h5>
         </div>
-        
+
         <div id="card" class="card-body justify-content-center">
             @if (session('status'))
             <div class="alert alert-success" role="alert">
                 {{ session('status') }}
             </div>
             @endif
-    
-            @if($existing_donar==false)
-            @if($current_donar_status->approved==1)
-            
-                <div class="card text-center" style="width: 15rem;">
-                    <div class="card-header bg-danger">
-                        Blood Needed
-                    </div>
-                   
-                    <div class="card-body">
-                        @if(isset($need)==null)
-                    
-                        @elseif($donar==null)
-                   <h3><p class="text-danger">Not Eligible</p></h3> 
-                    </div>
-                    @else
-                    <div class="card-body">
-                        @foreach($need as $n)
-    
-                        @if($donar->b_group == $n->blood_group)
-    
-                        {{$n->contact_name}} {{$n->mobile_no}}<br>
-    
-                        @endif
-    
-                        @endforeach
-    
-                    </div>
+
+        @if(!isset($donar))
+        <div class="col-lg-3">
+            <div class="card text-center">
+                <div class="card-header ">
+                    Status
                 </div>
-    
-                    <div class="card-footer text-muted">
-                        <a href="{{route('donar.request.view')}}" class="btn btn-danger">view</a>
-                    </div>
-                    @endif
-        </div>
-    
-                <br><br>
-    
-                @else
-                <div class="col-lg-3">
-                    <div class="card text-center">
-                        <div class="card-header ">
-                            status
-                        </div>
-                        <div class="card-body">
-                            please wait for conformation
-                        </div>
-                    </div>
+                <div class="card-body">
+                    Please Wait For Conformation
                 </div>
-    
-                @endif
-                @else
-                <p> You are logged in</p>
-                @endif
-    
             </div>
         </div>
+        @elseif(isset($need) && isset($donar) && $month >=3)
+        <div class="col-lg-3">
+            <div class="card text-center">
+                <div class="card-header ">
+                  Blood Need
+                </div>
+                @foreach($need as $bloodNeed)
+                @if($bloodNeed->blood_group == $donar->b_group )
+                <div class="card-body">
+                        Name : {{ $bloodNeed->contact_name }} <br>
+                        Contact Number: {{ $bloodNeed->mobile_no }}
+                </div>
+                @endif
+                @endforeach
+            </div>
+        </div>
+        @elseif($month < 3)
+        <div class="col-lg-3">
+            <div class="card text-center">
+                <div class="card-header ">
+                    Status
+                </div>
+                <div class="card-body">
+                   Not Eligibile
+                </div>
+            </div>
+        </div>
+        @else
+        <p> You are logged in</p>
+        @endif
+
+
+
+
 
 
 

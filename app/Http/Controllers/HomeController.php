@@ -32,7 +32,7 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        $existing_donors = Donar::all()->pluck('user_id')->toArray(); 
+        $existing_donors = Donar::all()->pluck('user_id')->toArray();
         $show_form = true;
         if(in_array(auth::id(), $existing_donors))
             {
@@ -40,24 +40,18 @@ class HomeController extends Controller
 
             }
             $count=0;
-           $d= Donar::where('approved',1)->where('user_id',Auth::id())->whereMonth('d_date','>',Carbon::today()->month)->first();
-           //dd($d);
-           $n= Need::where('status',0)->get();//->pluck('blood_group')->first();
-          //dd($n);
-          $donor= Donar::where('user_id',auth::id())->get();
-         
-         
-           
-          
-           
-          //dd($count);
-
-
-        return view('donardashboard')->with('current_donar_status',Donar::where('user_id',auth::id())->first())
+            $approvedDonor= Donar::where('approved',1)->where('user_id',Auth::id())->first();
+            $donor= Donar::where('user_id',auth::id())->first();
+            $to = Carbon::parse($donor->d_date);
+            $from = Carbon::now();
+            $diff_in_months = $to->diffInMonths($from);
+            $bloodNeed= Need::where('status',0)->get();
+             return view('donardashboard')
                                     ->with('existing_donar',$show_form)
-                                    ->with('donar',$d)
-                                    ->with('need',$n)
-                                    ->with('donor',$donor);
-                              
+                                    ->with('donar',$approvedDonor)
+                                    ->with('need',$bloodNeed)
+                                    ->with('donor',$donor)
+                                    ->with('month',$diff_in_months);
+
     }
 }
